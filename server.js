@@ -11,7 +11,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // MongoDB Connection
-const uri = "mongodb://localhost:27017/";
+const uri = "mongostat --uri mongodb+srv://yokeraj285:yoke2004@mycluster.ypezv.mongodb.net ";
 const client = new MongoClient(uri);
 
 let database;
