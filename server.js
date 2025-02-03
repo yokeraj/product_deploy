@@ -17,6 +17,8 @@ const client = new MongoClient(uri);
 let database;
 let collection;
 
+console.log("Git hub Connected"); 
+
 async function connectDB() {
     try {
         await client.connect();
