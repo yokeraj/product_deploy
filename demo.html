@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Card Generator</title>
+    <style>
+        body {
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            background-color: rgb(173, 216, 230);
+            color: #252548;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+
+        .container {
+            width: 650px;
+            background-color: rgb(169, 211, 225);
+            border: 2px solid #00000d;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+            transition: 0.3s ease-in-out;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 70%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-style: italic;
+        }
+
+        button {
+            width: 50%;
+            padding: 10px;
+            background-color: #252548;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            margin-top: 25px;
+            cursor: pointer;
+            font-size: medium;
+            transition: all 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #3a3a6e;
+            transform: scale(1.05);
+        }
+
+        .b-btn{
+            width: 25%;
+            padding: 10px;
+            background-color: #252548;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            margin-top: 25px;
+            cursor: pointer;
+            font-size: medium;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .reg-btn{
+            width: 25%;
+            padding: 10px;
+            background-color: #252548;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            margin-bottom: 1cm;
+            cursor: pointer;
+            font-size: medium;
+            transition: all 0.3s ease-in-out;
+            margin-left: 2cm;
+            
+            height: 42px;
+        }
+
+    </style>
+</head>
+<body>
+    <center>
+        <h1>STUDENT REPORT CARD GENERATOR</h1>
+
+        <div class="container">
+            <form id="reportForm">
+                <input type="text" id="studentName" placeholder="Student Name" required>
+                <input type="number" id="rollNo" placeholder="Roll Number" required>
+                <input type="text" id="Father" placeholder="Father Name" required>
+                <input type="number" id="className" placeholder="Class" required>
+                <input type="number" id="marks1" placeholder="TAMIL Marks" required>
+                <input type="number" id="marks2" placeholder="ENGLISH Marks" required>
+                <input type="number" id="marks3" placeholder="MATHS Marks" required>
+                <input type="number" id="marks4" placeholder="SCIENCE Marks" required>
+                <input type="number" id="marks5" placeholder="SOCIAL Marks" required>
+                <button type="submit">Save Report Card 💾</button>
+                
+            </form>
+        </div>
+        <button class="b-btn"> &#9664; Back</button> <button class="reg-btn">Reset &orarr;</button>
+        
+    </center>
+
+    <script>
+        document.getElementById("reportForm").addEventListener("submit", async function(event) {
+            event.preventDefault(); 
+
+            const studentName = document.getElementById("studentName").value;
+            const rollNo = document.getElementById("rollNo").value;
+            const Father = document.getElementById("Father").value;
+            const className = document.getElementById("className").value;
+            const marks = [
+                parseInt(document.getElementById("marks1").value),
+                parseInt(document.getElementById("marks2").value),
+                parseInt(document.getElementById("marks3").value),
+                parseInt(document.getElementById("marks4").value),
+                parseInt(document.getElementById("marks5").value)
+            ];
+
+            const response = await fetch("http://localhost:3000/add-report", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ studentName, rollNo, Father, className, marks }),
+            });
+
+            const result = await response.json();
+            alert(result.message);
+
+            if (response.ok) {
+                window.location.href = "front.html";
+            }
+        });
+    </script>
+</body>
+</html>

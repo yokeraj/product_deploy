@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Card</title>
+    <style>
+        body {
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            background-color: #f0f8ff;
+            color: #252548;
+            text-align: center;
+        }
+        .container {
+            width: 60%;
+            background-color: #ffffff;
+            border: 2px solid black;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 2cm auto;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.5s ease-in-out;
+        }
+        .show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #003366;
+            color: white;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #003366;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: medium;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #3a3a6e;
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <h1>✯ STUDENT REPORT CARD GENERATOR ✯</h1>
+    <label><strong>Enter Roll Number:</strong></label>
+    <input type="text" id="rollNumber" placeholder="Roll Number">
+    <br>
+    <button onclick="fetchReportCard()">GET REPORT</button>
+    <a href="demo.html"><button>REGISTER</button></a>
+    <hr>
+
+    <div id="reportCardContainer" class="container" style="display: none;">
+        <h1>Report Card</h1>
+        <p><strong>Roll Number:</strong> <span id="displayRollNumber"></span></p>
+        <p><strong>Name:</strong> <span id="displayName"></span></p>
+        <p><strong>Class:</strong> <span id="displayClass"></span></p>
+        <p><strong>Father's Name:</strong> <span id="displayFather"></span></p>
+
+        <table>
+            <tr>
+                <th>Subject</th>
+                <th>Marks</th>
+            </tr>
+            <tr><td>TAMIL</td><td id="subject1"></td></tr>
+            <tr><td>ENGLISH</td><td id="subject2"></td></tr>
+            <tr><td>MATHS</td><td id="subject3"></td></tr>
+            <tr><td>SCIENCE</td><td id="subject4"></td></tr>
+            <tr><td>SOCIAL</td><td id="subject5"></td></tr>
+        </table>
+        <p><strong>Total Marks:</strong> <span id="totalMarks"></span></p>
+        <p><strong>Percentage:</strong> <span id="percentage"></span>%</p>
+    </div>
+
+    <script>
+        async function fetchReportCard() {
+            const rollNumber = document.getElementById("rollNumber").value.trim();
+            if (!rollNumber) {
+                alert("Please enter a valid roll number.");
+                return;
+            }
+            try {
+                const response = await fetch(`http://localhost:3000/student/${rollNumber}`);
+                const student = await response.json();
+                if (response.ok) {
+                    document.getElementById("displayRollNumber").textContent = student.rollNo;
+                    document.getElementById("displayName").textContent = student.studentName;
+                    document.getElementById("displayClass").textContent = student.className;
+                    document.getElementById("displayFather").textContent = student.Father;
+                    
+                    const marks = student.marks;
+                    document.getElementById("subject1").textContent = marks[0];
+                    document.getElementById("subject2").textContent = marks[1];
+                    document.getElementById("subject3").textContent = marks[2];
+                    document.getElementById("subject4").textContent = marks[3];
+                    document.getElementById("subject5").textContent = marks[4];
+                    
+                    const total = marks.reduce((sum, mark) => sum + mark, 0);
+                    document.getElementById("totalMarks").textContent = total;
+                    document.getElementById("percentage").textContent = ((total / (marks.length * 100)) * 100).toFixed(2);
+                    
+                    const reportCardContainer = document.getElementById("reportCardContainer");
+                    reportCardContainer.style.display = "block";
+                    setTimeout(() => {
+                        reportCardContainer.classList.add("show");
+                    }, 10);
+                } else {
+                    alert(student.error);
+                }
+            } catch (error) {
+                alert("Error fetching student details.");
+            }
+        }
+    </script>
+</body>
+</html>
